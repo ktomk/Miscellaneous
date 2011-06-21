@@ -5,7 +5,7 @@
  * php's getimagesize does not support additional image information
  * from PNG files like channels or bits.
  *
- * get_png_imageinfo() can be used to optain this information
+ * get_png_imageinfo() can be used to obtain this information
  * from PNG files.
  *
  * @author Tom Klingenberg <lastflood.net>
