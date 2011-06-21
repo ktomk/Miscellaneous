@@ -1,8 +1,8 @@
 <?php
 /**
- * get_png_imageinfo example
- * 
- * open in browser or execute in shell. 
+ * get_png_imageinfo() example
+ *
+ * open in browser or execute in shell.
  */
 
 // load function
@@ -35,16 +35,16 @@ function render_info($file, $info) {
 	if (!$info) {
 		printf('<h1>ERROR: Not a PNG file: %s</h1>', htmlspecialchars($file));
 	} else {
-	
+
 		printf('<h1>%1$s</h1><img src="%s" width="%d" height="%d" align="left">
 			<ul style="float:left;">', htmlspecialchars($file), $info['width'], $info['height']);
-	
+
 		foreach($info as $key=>$value) {
 			printf('<li><b>%s:</b> %s</li>', $key, $value);
 		}
-		
+
 		print('</ul><br clear="all">');
 	}
-	
+
 	printf('<hr>');
 }

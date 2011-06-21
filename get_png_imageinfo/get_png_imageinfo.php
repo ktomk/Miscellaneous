@@ -10,7 +10,7 @@
  *
  * @author Tom Klingenberg <lastflood.net>
  * @license Apache 2.0
- * @version 0.1
+ * @version 0.1.0
  * @link http://www.libpng.org/pub/png/spec/iso/index-object.html#11IHDR
  *
  * @param string $file filename
