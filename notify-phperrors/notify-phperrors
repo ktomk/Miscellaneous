@@ -1,0 +1,68 @@
+#!/bin/bash
+#
+# notify-phperrors - notify-send tail -f loop on php error log
+#
+# Author: tk
+# Version: 0.0.1 alpha
+#
+
+
+php_ini=$(php --ini | grep -P "^L[a-zA-Z ]+e:"|sed 's_^\(L[a-zA-Z ]\+e:\)\s*\(.*\)_\2_')
+
+if [ ! -r "$php_ini" ]
+  then
+    echo Error: PHP ini not found: $php_ini.
+    exit 2
+fi
+
+echo Info: php.ini is $php_ini.
+
+php_error_log=$(cat $php_ini | grep -P '^(\s*error_log\s*=\s*)(.*)' | sed 's_^\(\s*error\_log\s*=\s*\)\(.*\)\s*$_\2_')
+
+if [ ! -r "$php_error_log" ]
+  then
+    echo Warn: PHP error logfile does not exists: $php_ini.
+fi
+
+echo Info: Notifying PHP Errors from $php_error_log ...
+echo
+
+tail -n0 -f $php_error_log | while read line;
+do
+
+    # tie error log
+    echo $line
+
+    # remove time
+	message=$(echo -n $line | sed 's_^\[[^]]*\] __')
+
+    # take out type of php error
+	type=$(echo -n $message | sed 's_^\([^:]\+\):.*_\1_')
+	text=$(echo -n $message | sed 's_^\([^:]\+\): \(.*\)_\2_')
+
+    if [ "$type" == 'PHP Stack trace' ]
+      then
+        continue
+    fi
+    if [[ "$type" =~ PHP\ [0-9]+\.* ]]
+      then
+         continue
+    fi
+
+    # message and file
+	errmes=$(echo -n $text | sed 's_^\(.*\+\)\( in \)\(.*\)$_\1_')
+	errfile=$(echo -n $text | sed 's_^\(.*\+\)\( in \)\(.*\)$_\3_')
+
+
+	#echo $message
+    #echo $type
+	#echo $text
+
+	time=$(echo -n $text | wc -w)
+        time=$((1200+500*$time))
+
+	notify-send -t $time -i `pwd`/warning.png "$type" "<b>$errmes</b>\n\n$errfile"
+
+
+done
+
